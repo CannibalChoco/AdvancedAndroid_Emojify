@@ -179,11 +179,15 @@ public class MainActivity extends AppCompatActivity {
         mClearFab.setVisibility(View.VISIBLE);
 
         // Resample the saved image to fit the ImageView
-        mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
-        
+        try {
+            mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // Detect the faces
-        Emojifier.detectFaces(this, mResultsBitmap);
-        // TODO (10): Change the method call from detectFaces() to detectFacesAndOverlayEmoji() and assign the result to mResultsBitmap.
+        Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap);
+        // DONE (10): Change the method call from detectFaces() to detectFacesAndOverlayEmoji() and assign the result to mResultsBitmap.
         
         // Set the new bitmap to the ImageView
         mImageView.setImageBitmap(mResultsBitmap);
