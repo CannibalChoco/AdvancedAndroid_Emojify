@@ -185,10 +185,10 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Detect the faces
-        Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap);
-        // DONE (10): Change the method call from detectFaces() to detectFacesAndOverlayEmoji() and assign the result to mResultsBitmap.
-        
+
+        // Detect the faces and overlay the appropriate emoji
+        mResultsBitmap = Emojifier.detectFacesandOverlayEmoji(this, mResultsBitmap);
+
         // Set the new bitmap to the ImageView
         mImageView.setImageBitmap(mResultsBitmap);
     }
