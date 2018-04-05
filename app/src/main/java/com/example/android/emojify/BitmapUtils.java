@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
@@ -47,7 +49,7 @@ class BitmapUtils {
      * @param imagePath The path of the photo to be resampled.
      * @return The resampled bitmap
      */
-    static Bitmap resamplePic(Context context, String imagePath) {
+    static Bitmap resamplePic(Context context, String imagePath) throws IOException {
 
         // Get device screen size information
         DisplayMetrics metrics = new DisplayMetrics();
@@ -71,7 +73,26 @@ class BitmapUtils {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
 
-        return BitmapFactory.decodeFile(imagePath);
+        // get the right orientation
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
+
+        // Read EXIF Data
+        ExifInterface exif = new ExifInterface(imagePath);
+        String orientationString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientationString != null ? Integer.parseInt(orientationString)
+                : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+
+        // rotate bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) photoW / 2, (float) photoH / 2);
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0 , photoW, photoH, matrix, true);
+
+        return rotatedBitmap;
     }
 
     /**
@@ -191,4 +212,5 @@ class BitmapUtils {
         shareIntent.putExtra(Intent.EXTRA_STREAM, photoURI);
         context.startActivity(shareIntent);
     }
+
 }

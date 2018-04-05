@@ -182,7 +182,11 @@ public class MainActivity extends AppCompatActivity {
         mClearFab.setVisibility(View.VISIBLE);
 
         // Resample the saved image to fit the ImageView
-        mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
+        try {
+            mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // DONE (3): Call the new detectFaces() method, passing in the resampled bitmap to detect the faces in the picture.
         Emojifier.detectFaces(this, mResultsBitmap);
