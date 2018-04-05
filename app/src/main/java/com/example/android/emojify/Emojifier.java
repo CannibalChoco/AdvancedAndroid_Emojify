@@ -112,12 +112,13 @@ class Emojifier {
                                 R.drawable.rightwinkfrown);
                         break;
                     default:
-                            emojiBitmap = null;
+                        emojiBitmap = null;
+                        Toast.makeText(context, R.string.no_emoji, Toast.LENGTH_SHORT).show();
                 }
 
                 // DONE (8): Call addBitmapToFace(), passing in the resultBitmap, the emojiBitmap
                 // and the Face  object, and assigning the result to resultBitmap
-                resultBitmap = addBitmapToFace(picture, emojiBitmap, face);
+                resultBitmap = addBitmapToFace(resultBitmap, emojiBitmap, face);
             }
         }
 
@@ -198,14 +199,16 @@ class Emojifier {
 
         // Determine the size of the emoji to match the width of the face and preserve aspect ratio
         int newEmojiWidth = (int) (face.getWidth() * scaleFactor);
-        int newEmojiHeight = (int) (emojiBitmap.getHeight() * newEmojiWidth / emojiBitmap.getWidth()
-                * scaleFactor);
+        int newEmojiHeight = (int) (emojiBitmap.getHeight() *
+                newEmojiWidth / emojiBitmap.getWidth() * scaleFactor);
 
         // scale the emoji
         emojiBitmap = Bitmap.createScaledBitmap(emojiBitmap, newEmojiWidth, newEmojiHeight, false);
 
-        float emojiPositionX = (face.getPosition().x + face.getWidth() / 2) - emojiBitmap.getWidth() / 2;
-        float emojiPositionY = (face.getPosition().y + face.getHeight() / 2) - emojiBitmap.getHeight() / 3;
+        float emojiPositionX =
+                (face.getPosition().x + face.getWidth() / 2) - emojiBitmap.getWidth() / 2;
+        float emojiPositionY =
+                (face.getPosition().y + face.getHeight() / 2) - emojiBitmap.getHeight() / 3;
 
         // create Canvas and draw bitmap to it
         Canvas canvas = new Canvas(resultBitmap);
