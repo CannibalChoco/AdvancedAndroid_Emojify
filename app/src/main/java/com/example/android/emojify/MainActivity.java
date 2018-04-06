@@ -182,8 +182,12 @@ public class MainActivity extends AppCompatActivity {
         mClearFab.setVisibility(View.VISIBLE);
 
         // Resample the saved image to fit the ImageView
-        mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
-        
+        try {
+            mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         // Detect the faces and overlay the appropriate emoji
         mResultsBitmap = Emojifier.detectFacesandOverlayEmoji(this, mResultsBitmap);
